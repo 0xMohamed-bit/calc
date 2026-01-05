@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آلة حاسبة علمية متطورة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* الهيدر */
+        .app-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.15);
+        }
+
+        .app-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .app-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* الآلة الحاسبة */
+        .calculator-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .calculator-display {
+            background: #2c3e50;
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .calculation-expression {
+            color: #aaa;
+            font-size: 1.3rem;
+            min-height: 32px;
+            word-break: break-all;
+            margin-bottom: 12px;
+            direction: ltr;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calculation-result {
+            color: white;
+            font-size: 3.2rem;
+            font-weight: 300;
+            min-height: 72px;
+            word-break: break-all;
+            direction: ltr;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .calculator-controls {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-controls {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .calculator-controls {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .calc-btn {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: 500;
+            height: 70px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .calc-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .calc-btn.number {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .calc-btn.operator {
+            background: #3498db;
+            color: white;
+        }
+
+        .calc-btn.scientific {
+            background: #9b59b6;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .calc-btn.equals {
+            background: #2ecc71;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .calc-btn.clear {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .calc-btn.memory {
+            background: #f39c12;
+            color: white;
+        }
+
+        .calc-btn.special {
+            background: #1abc9c;
+            color: white;
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .btn-label {
+            font-size: 0.9rem;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        /* الشريط الجانبي */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: #f8f9fa;
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .panel-content {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* سجل الحسابات */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            padding: 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-right: 4px solid #3498db;
+            direction: ltr;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            background: #edf2f7;
+            transform: translateX(-5px);
+        }
+
+        .history-expression {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .history-result {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .history-date {
+            color: #95a5a6;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        /* الذاكرة */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .memory-slot {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .memory-slot:hover {
+            background: #edf2f7;
+        }
+
+        .memory-slot.active {
+            border-color: #f39c12;
+            background: #fef9e7;
+        }
+
+        .memory-label {
+            color: #f39c12;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .memory-value {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            font-weight: 600;
+            word-break: break-all;
+            min-height: 28px;
+        }
+
+        .memory-empty {
+            color: #bdc3c7;
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        /* الأزرار العامة */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* الفوتر */
+        .app-footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* التبويبات */
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: #666;
+        }
+
+        .tab.active {
+            background: white;
+            color: #3498db;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* الرسائل */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* وضع الظلام */
+        body.dark-mode {
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .calculator-card,
+        body.dark-mode .panel,
+        body.dark-mode .app-footer {
+            background: #162447;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .panel-header {
+            background: #1f4068;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        body.dark-mode .calc-btn {
+            background: #1f4068;
+            color: #e0e0e0;
+            border: 1px solid #2c3e50;
+        }
+
+        body.dark-mode .calc-btn.number {
+            background: #1a1a2e;
+        }
+
+        body.dark-mode .history-item,
+        body.dark-mode .memory-slot {
+            background: #1f4068;
+        }
+
+        body.dark-mode .history-item:hover,
+        body.dark-mode .memory-slot:hover {
+            background: #2c3e50;
+        }
+
+        body.dark-mode .tabs {
+            background: #1f4068;
+        }
+
+        body.dark-mode .tab.active {
+            background: #162447;
+            color: #4cc9f0;
+        }
+
+        /* تبديل الوضع */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            color: #f39c12;
+            font-size: 1.5rem;
+            border: none;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: #162447;
+            color: #f1c40f;
+        }
+
+        /* التنبيهات */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-info {
+            background: #d6eaf8;
+            color: #2c3e50;
+            border-right: 4px solid #3498db;
+        }
+
+        body.dark-mode .alert-info {
+            background: #1f4068;
+            color: #e0e0e0;
+        }
+
+        /* إخفاء العناصر */
+        .hidden {
+            display: none !important;
+        }
+
+        /* شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: #1f4068;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <!-- تبديل الوضع -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="app-container">
+        <!-- الهيدر -->
+        <header class="app-header">
+            <h1><i class="fas fa-calculator"></i> آلة حاسبة علمية متطورة</h1>
+            <p>آلة حاسبة شاملة مع وظائف علمية متقدمة، ذاكرة، وسجل حسابات - صممت لتكون مريحة للعين وسهلة الاستخدام</p>
+        </header>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <!-- الآلة الحاسبة -->
+            <div class="calculator-card">
+                <div class="calculator-display">
+                    <div class="calculation-expression" id="expression"></div>
+                    <div class="calculation-result" id="result">0</div>
+                </div>
+                
+                <div class="tabs" id="modeTabs">
+                    <div class="tab active" data-mode="basic">أساسي</div>
+                    <div class="tab" data-mode="scientific">علمي</div>
+                    <div class="tab" data-mode="memory">ذاكرة</div>
+                </div>
+                
+                <div class="calculator-controls" id="calculatorControls">
+                    <!-- سيتم ملء الأزرار عبر JavaScript -->
+                </div>
+            </div>
+
+            <!-- الشريط الجانبي -->
+            <div class="sidebar">
+                <!-- سجل الحسابات -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-history"></i> سجل الحسابات</h2>
+                        <button class="btn btn-secondary" id="clearHistory">
+                            <i class="fas fa-trash"></i> مسح
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="history-list" id="historyList">
+                            <!-- سيتم ملء سجل الحسابات عبر JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الذاكرة -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-memory"></i> الذاكرة</h2>
+                        <div>
+                            <button class="btn btn-primary" id="memoryHelp" title="مساعدة الذاكرة">
+                                <i class="fas fa-question-circle"></i>
+                            </button>
+                            <button class="btn btn-danger" id="clearMemory">
+                                <i class="fas fa-broom"></i> مسح الكل
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <div>انقر على فتحة ذاكرة لتحديدها، ثم استخدم أزرار الذاكرة في الآلة الحاسبة</div>
+                        </div>
+                        <div class="memory-grid" id="memorySlots">
+                            <!-- سيتم ملء فتحات الذاكرة عبر JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الفوتر -->
+        <footer class="app-footer">
+            <p>تم تصميم هذه الآلة الحاسبة لتكون مريحة للعين وسهلة الاستخدام. تدعم جميع العمليات الحسابية والعلمية المتقدمة.</p>
+            <p style="margin-top: 10px;">استخدم لوحة المفاتيح لإدخال الأرقام والعمليات مباشرة | <span id="currentTime"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        // الكائن الرئيسي للآلة الحاسبة
+        const CalculatorApp = {
+            // حالة التطبيق
+            state: {
+                currentInput: '0',
+                expression: '',
+                lastResult: null,
+                waitingForNewInput: false,
+                currentMode: 'basic',
+                memory: {
+                    M1: null,
+                    M2: null,
+                    M3: null,
+                    M4: null
+                },
+                history: [],
+                activeMemorySlot: 'M1'
+            },
+
+            // تهيئة التطبيق
+            init() {
+                this.loadFromLocalStorage();
+                this.setupEventListeners();
+                this.createButtons();
+                this.updateDisplay();
+                this.renderHistory();
+                this.renderMemorySlots();
+                this.updateTime();
+                this.setupKeyboardSupport();
+                
+                // تحديث الوقت كل دقيقة
+                setInterval(() => this.updateTime(), 60000);
+            },
+
+            // تحميل البيانات المحفوظة
+            loadFromLocalStorage() {
+                const savedHistory = localStorage.getItem('calcHistory');
+                const savedMemory = localStorage.getItem('calcMemory');
+                const savedTheme = localStorage.getItem('calcTheme');
+                const savedMode = localStorage.getItem('calcMode');
+
+                if (savedHistory) this.state.history = JSON.parse(savedHistory);
+                if (savedMemory) this.state.memory = JSON.parse(savedMemory);
+                if (savedMode) this.state.currentMode = savedMode;
+                
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+                }
+                
+                // تحديث التبويب النشط
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.mode === this.state.currentMode) {
+                        tab.classList.add('active');
+                    }
+                });
+            },
+
+            // حفظ البيانات
+            saveToLocalStorage() {
+                localStorage.setItem('calcHistory', JSON.stringify(this.state.history));
+                localStorage.setItem('calcMemory', JSON.stringify(this.state.memory));
+                localStorage.setItem('calcMode', this.state.currentMode);
+                localStorage.setItem('calcTheme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            },
+
+            // إعداد مستمعي الأحداث
+            setupEventListeners() {
+                // تبديل الوضع
+                document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
+                
+                // مسح السجل
+                document.getElementById('clearHistory').addEventListener('click', () => this.clearHistory());
+                
+                // مسح الذاكرة
+                document.getElementById('clearMemory').addEventListener('click', () => this.clearAllMemory());
+                
+                // مساعدة الذاكرة
+                document.getElementById('memoryHelp').addEventListener('click', () => this.showMemoryHelp());
+                
+                // التبويبات
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        this.switchMode(tab.dataset.mode);
+                    });
+                });
+            },
+
+            // إنشاء أزرار الآلة الحاسبة
+            createButtons() {
+                const controls = document.getElementById('calculatorControls');
+                controls.innerHTML = '';
+
+                // تعريف الأزرار حسب الوضع
+                const buttonSets = {
+                    basic: [
+                        { text: 'C', class: 'clear', action: 'clear', icon: 'fa-backspace' },
+                        { text: '⌫', class: 'special', action: 'backspace', icon: 'fa-delete-left' },
+                        { text: '%', class: 'operator', action: 'percentage', icon: 'fa-percent' },
+                        { text: '÷', class: 'operator', action: 'operator', value: '/' },
+                        { text: '7', class: 'number', action: 'number', value: '7' },
+                        { text: '8', class: 'number', action: 'number', value: '8' },
+                        { text: '9', class: 'number', action: 'number', value: '9' },
+                        { text: '×', class: 'operator', action: 'operator', value: '*' },
+                        { text: '4', class: 'number', action: 'number', value: '4' },
+                        { text: '5', class: 'number', action: 'number', value: '5' },
+                        { text: '6', class: 'number', action: 'number', value: '6' },
+                        { text: '-', class: 'operator', action: 'operator', value: '-' },
+                        { text: '1', class: 'number', action: 'number', value: '1' },
+                        { text: '2', class: 'number', action: 'number', value: '2' },
+                        { text: '3', class: 'number', action: 'number', value: '3' },
+                        { text: '+', class: 'operator', action: 'operator', value: '+' },
+                        { text: '±', class: 'special', action: 'toggleSign', icon: 'fa-plus-minus' },
+                        { text: '0', class: 'number', action: 'number', value: '0' },
+                        { text: '.', class: 'special', action: 'decimal', icon: 'fa-circle' },
+                        { text: '=', class: 'equals', action: 'calculate', icon: 'fa-equals' }
+                    ],
+                    scientific: [
+                        { text: 'sin', class: 'scientific', action: 'sin', label: 'sin(x)' },
+                        { text: 'cos', class: 'scientific', action: 'cos', label: 'cos(x)' },
+                        { text: 'tan', class: 'scientific', action: 'tan', label: 'tan(x)' },
+                        { text: 'π', class: 'scientific', action: 'pi', icon: 'fa-pi' },
+                        { text: 'e', class: 'scientific', action: 'e', label: 'e' },
+                        { text: 'x²', class: 'scientific', action: 'square', label: 'x²' },
+                        { text: 'x³', class: 'scientific', action: 'cube', label: 'x³' },
+                        { text: '√', class: 'scientific', action: 'sqrt', label: '√x' },
+                        { text: 'log', class: 'scientific', action: 'log', label: 'log₁₀' },
+                        { text: 'ln', class: 'scientific', action: 'ln', label: 'ln' },
+                        { text: 'x!', class: 'scientific', action: 'factorial', label: 'x!' },
+                        { text: '10ˣ', class: 'scientific', action: 'tenPower', label: '10ˣ' },
+                        { text: '(', class: 'operator', action: 'parenthesis', value: '(' },
+                        { text: ')', class: 'operator', action: 'parenthesis', value: ')' },
+                        { text: 'xʸ', class: 'scientific', action: 'power', label: 'xʸ' },
+                        { text: '1/x', class: 'scientific', action: 'reciprocal', label: '1/x' },
+                        { text: 'ANS', class: 'memory', action: 'ans', label: 'الجواب السابق' },
+                        { text: 'EE', class: 'scientific', action: 'scientificNotation', label: 'EE' },
+                        { text: '±', class: 'special', action: 'toggleSign', icon: 'fa-plus-minus' },
+                        { text: '=', class: 'equals', action: 'calculate', icon: 'fa-equals' }
+                    ],
+                    memory: [
+                        { text: 'MC', class: 'memory', action: 'memoryClear', label: 'مسح الذاكرة' },
+                        { text: 'MR', class: 'memory', action: 'memoryRecall', label: 'استرجاع' },
+                        { text: 'M+', class: 'memory', action: 'memoryAdd', label: 'إضافة' },
+                        { text: 'M-', class: 'memory', action: 'memorySubtract', label: 'طرح' },
+                        { text: 'MS', class: 'memory', action: 'memoryStore', label: 'تخزين' },
+                        { text: 'M1', class: 'memory', action: 'selectMemory', value: 'M1', label: 'حدد M1' },
+                        { text: 'M2', class: 'memory', action: 'selectMemory', value: 'M2', label: 'حدد M2' },
+                        { text: 'M3', class: 'memory', action: 'selectMemory', value: 'M3', label: 'حدد M3' },
+                        { text: 'M4', class: 'memory', action: 'selectMemory', value: 'M4', label: 'حدد M4' },
+                        { text: 'C', class: 'clear', action: 'clear', icon: 'fa-backspace' },
+                        { text: '⌫', class: 'special', action: 'backspace', icon: 'fa-delete-left' },
+                        { text: '7', class: 'number', action: 'number', value: '7' },
+                        { text: '8', class: 'number', action: 'number', value: '8' },
+                        { text: '9', class: 'number', action: 'number', value: '9' },
+                        { text: '÷', class: 'operator', action: 'operator', value: '/' },
+                        { text: '4', class: 'number', action: 'number', value: '4' },
+                        { text: '5', class: 'number', action: 'number', value: '5' },
+                        { text: '6', class: 'number', action: 'number', value: '6' },
+                        { text: '×', class: 'operator', action: 'operator', value: '*' },
+                        { text: '1', class: 'number', action: 'number', value: '1' },
+                        { text: '2', class: 'number', action: 'number', value: '2' },
+                        { text: '3', class: 'number', action: 'number', value: '3' },
+                        { text: '-', class: 'operator', action: 'operator', value: '-' },
+                        { text: '0', class: 'number', action: 'number', value: '0', span: '2' },
+                        { text: '.', class: 'special', action: 'decimal', icon: 'fa-circle' },
+                        { text: '+', class: 'operator', action: 'operator', value: '+' },
+                        { text: '=', class: 'equals', action: 'calculate', icon: 'fa-equals' }
+                    ]
+                };
+
+                // إنشاء الأزرار للوضع الحالي
+                const buttons = buttonSets[this.state.currentMode];
+                
+                buttons.forEach(btn => {
+                    const button = document.createElement('button');
+                    button.className = `calc-btn ${btn.class}`;
+                    button.setAttribute('data-action', btn.action);
+                    
+                    if (btn.value) {
+                        button.setAttribute('data-value', btn.value);
+                    }
+                    
+                    if (btn.span) {
+                        button.style.gridColumn = `span ${btn.span}`;
+                    }
+                    
+                    // إضافة المحتوى
+                    let buttonContent = '';
+                    
+                    if (btn.icon) {
+                        buttonContent += `<i class="fas ${btn.icon} btn-icon"></i>`;
+                    }
+                    
+                    buttonContent += `<span>${btn.text}</span>`;
+                    
+                    if (btn.label) {
+                        buttonContent += `<small class="btn-label">${btn.label}</small>`;
+                    }
+                    
+                    button.innerHTML = buttonContent;
+                    
+                    // إضافة مستمع الحدث
+                    button.addEventListener('click', () => {
+                        this.handleButtonClick(btn.action, btn.value);
+                    });
+                    
+                    controls.appendChild(button);
+                });
+            },
+
+            // تبديل الوضع
+            switchMode(mode) {
+                this.state.currentMode = mode;
+                
+                // تحديث التبويبات
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.mode === mode) {
+                        tab.classList.add('active');
+                    }
+                });
+                
+                // إعادة إنشاء الأزرار
+                this.createButtons();
+                this.saveToLocalStorage();
+            },
+
+            // معالجة النقر على الأزرار
+            handleButtonClick(action, value) {
+                switch(action) {
+                    case 'number':
+                        this.inputNumber(value);
+                        break;
+                    case 'operator':
+                        this.inputOperator(value);
+                        break;
+                    case 'decimal':
+                        this.inputDecimal();
+                        break;
+                    case 'clear':
+                        this.clear();
+                        break;
+                    case 'backspace':
+                        this.backspace();
+                        break;
+                    case 'toggleSign':
+                        this.toggleSign();
+                        break;
+                    case 'percentage':
+                        this.percentage();
+                        break;
+                    case 'calculate':
+                        this.calculate();
+                        break;
+                    case 'sin':
+                        this.sin();
+                        break;
+                    case 'cos':
+                        this.cos();
+                        break;
+                    case 'tan':
+                        this.tan();
+                        break;
+                    case 'pi':
+                        this.pi();
+                        break;
+                    case 'e':
+                        this.e();
+                        break;
+                    case 'square':
+                        this.square();
+                        break;
+                    case 'cube':
+                        this.cube();
+                        break;
+                    case 'sqrt':
+                        this.sqrt();
+                        break;
+                    case 'log':
+                        this.log();
+                        break;
+                    case 'ln':
+                        this.ln();
+                        break;
+                    case 'factorial':
+                        this.factorial();
+                        break;
+                    case 'tenPower':
+                        this.tenPower();
+                        break;
+                    case 'power':
+                        this.power();
+                        break;
+                    case 'reciprocal':
+                        this.reciprocal();
+                        break;
+                    case 'parenthesis':
+                        this.parenthesis(value);
+                        break;
+                    case 'ans':
+                        this.ans();
+                        break;
+                    case 'scientificNotation':
+                        this.scientificNotation();
+                        break;
+                    case 'memoryClear':
+                        this.memoryClear();
+                        break;
+                    case 'memoryRecall':
+                        this.memoryRecall();
+                        break;
+                    case 'memoryAdd':
+                        this.memoryAdd();
+                        break;
+                    case 'memorySubtract':
+                        this.memorySubtract();
+                        break;
+                    case 'memoryStore':
+                        this.memoryStore();
+                        break;
+                    case 'selectMemory':
+                        this.selectMemorySlot(value);
+                        break;
+                }
+                
+                this.updateDisplay();
+            },
+
+            // الدوال الأساسية
+            inputNumber(num) {
+                if (this.state.waitingForNewInput) {
+                    this.state.currentInput = num;
+                    this.state.waitingForNewInput = false;
+                    this.state.expression = num;
+                } else {
+                    this.state.currentInput = this.state.currentInput === '0' ? num : this.state.currentInput + num;
+                    this.state.expression = this.state.expression === '' ? num : this.state.expression + num;
+                }
+            },
+
+            inputOperator(op) {
+                const operators = {
+                    '+': '+',
+                    '-': '-',
+                    '×': '*',
+                    '÷': '/'
+                };
+                
+                const opSymbol = operators[op] || op;
+                
+                if (this.state.waitingForNewInput) {
+                    this.state.expression = this.state.currentInput + op;
+                } else {
+                    this.state.expression += op;
+                }
+                
+                this.state.currentInput = '0';
+                this.state.waitingForNewInput = true;
+            },
+
+            inputDecimal() {
+                if (this.state.waitingForNewInput) {
+                    this.state.currentInput = '0.';
+                    this.state.expression = '0.';
+                    this.state.waitingForNewInput = false;
+                } else if (!this.state.currentInput.includes('.')) {
+                    this.state.currentInput += '.';
+                    this.state.expression += '.';
+                }
+            },
+
+            clear() {
+                this.state.currentInput = '0';
+                this.state.expression = '';
+                this.state.waitingForNewInput = false;
+            },
+
+            backspace() {
+                if (this.state.currentInput.length > 1) {
+                    this.state.currentInput = this.state.currentInput.slice(0, -1);
+                    this.state.expression = this.state.expression.slice(0, -1);
+                } else {
+                    this.state.currentInput = '0';
+                    this.state.expression = this.state.expression.slice(0, -1);
+                }
+            },
+
+            toggleSign() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    this.state.currentInput = String(-value);
+                    
+                    // تحديث التعبير
+                    const lastNumberMatch = this.state.expression.match(/([-+]?\d*\.?\d+)$/);
+                    if (lastNumberMatch) {
+                        this.state.expression = this.state.expression.replace(/([-+]?\d*\.?\d+)$/, this.state.currentInput);
+                    }
+                }
+            },
+
+            percentage() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = value / 100;
+                    this.state.currentInput = String(result);
+                    
+                    // تحديث التعبير
+                    const lastNumberMatch = this.state.expression.match(/([-+]?\d*\.?\d+)$/);
+                    if (lastNumberMatch) {
+                        this.state.expression = this.state.expression.replace(/([-+]?\d*\.?\d+)$/, this.state.currentInput);
+                    }
+                }
+            },
+
+            calculate() {
+                try {
+                    // تنظيف التعبير
+                    let expressionToEval = this.state.expression
+                        .replace(/×/g, '*')
+                        .replace(/÷/g, '/')
+                        .replace(/π/g, Math.PI)
+                        .replace(/e/g, Math.E)
+                        .replace(/√/g, 'Math.sqrt')
+                        .replace(/sin/g, 'Math.sin')
+                        .replace(/cos/g, 'Math.cos')
+                        .replace(/tan/g, 'Math.tan')
+                        .replace(/log/g, 'Math.log10')
+                        .replace(/ln/g, 'Math.log');
+                    
+                    // حساب النتيجة
+                    const result = eval(expressionToEval);
+                    
+                    // التحقق من النتيجة
+                    if (!isFinite(result)) {
+                        throw new Error('نتيجة غير محددة');
+                    }
+                    
+                    // حفظ النتيجة
+                    this.state.lastResult = result;
+                    this.state.currentInput = String(result);
+                    
+                    // إضافة إلى السجل
+                    this.addToHistory(this.state.expression, result);
+                    
+                    // إعادة تعيين الحالة
+                    this.state.waitingForNewInput = true;
+                    
+                } catch (error) {
+                    this.state.currentInput = 'خطأ';
+                    console.error('خطأ في الحساب:', error);
+                }
+            },
+
+            // الدوال العلمية
+            sin() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = Math.sin(value);
+                    this.applyScientificFunction('sin', value, result);
+                }
+            },
+
+            cos() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = Math.cos(value);
+                    this.applyScientificFunction('cos', value, result);
+                }
+            },
+
+            tan() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = Math.tan(value);
+                    this.applyScientificFunction('tan', value, result);
+                }
+            },
+
+            pi() {
+                this.state.currentInput = String(Math.PI);
+                this.state.expression = this.state.expression === '' ? 'π' : this.state.expression + 'π';
+                this.state.waitingForNewInput = false;
+            },
+
+            e() {
+                this.state.currentInput = String(Math.E);
+                this.state.expression = this.state.expression === '' ? 'e' : this.state.expression + 'e';
+                this.state.waitingForNewInput = false;
+            },
+
+            square() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = value * value;
+                    this.applyScientificFunction('²', value, result);
+                }
+            },
+
+            cube() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = value * value * value;
+                    this.applyScientificFunction('³', value, result);
+                }
+            },
+
+            sqrt() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value) && value >= 0) {
+                    const result = Math.sqrt(value);
+                    this.applyScientificFunction('√', value, result);
+                } else {
+                    this.state.currentInput = 'خطأ';
+                }
+            },
+
+            log() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value) && value > 0) {
+                    const result = Math.log10(value);
+                    this.applyScientificFunction('log', value, result);
+                } else {
+                    this.state.currentInput = 'خطأ';
+                }
+            },
+
+            ln() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value) && value > 0) {
+                    const result = Math.log(value);
+                    this.applyScientificFunction('ln', value, result);
+                } else {
+                    this.state.currentInput = 'خطأ';
+                }
+            },
+
+            factorial() {
+                const value = parseInt(this.state.currentInput);
+                if (!isNaN(value) && value >= 0 && Number.isInteger(value)) {
+                    let result = 1;
+                    for (let i = 2; i <= value; i++) {
+                        result *= i;
+                    }
+                    this.applyScientificFunction('!', value, result);
+                } else {
+                    this.state.currentInput = 'خطأ';
+                }
+            },
+
+            tenPower() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    const result = Math.pow(10, value);
+                    this.applyScientificFunction('10^', value, result);
+                }
+            },
+
+            power() {
+                this.state.expression += '^';
+                this.state.waitingForNewInput = true;
+            },
+
+            reciprocal() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value) && value !== 0) {
+                    const result = 1 / value;
+                    this.applyScientificFunction('1/', value, result);
+                } else {
+                    this.state.currentInput = 'خطأ';
+                }
+            },
+
+            parenthesis(value) {
+                this.state.expression += value;
+                this.state.waitingForNewInput = false;
+            },
+
+            ans() {
+                if (this.state.lastResult !== null) {
+                    this.state.currentInput = String(this.state.lastResult);
+                    this.state.expression = this.state.expression === '' ? 
+                        String(this.state.lastResult) : this.state.expression + String(this.state.lastResult);
+                    this.state.waitingForNewInput = false;
+                }
+            },
+
+            scientificNotation() {
+                const value = parseFloat(this.state.currentInput);
+                if (!isNaN(value)) {
+                    this.state.currentInput = value.toExponential(5);
+                    this.state.expression = value.toExponential(5);
+                }
+            },
+
+            // تطبيق دالة علمية (نمط مشترك)
+            applyScientificFunction(funcName, inputValue, result) {
+                this.state.currentInput = String(result);
+                this.state.expression = `${funcName}(${inputValue})`;
+                this.addToHistory(this.state.expression, result);
+                this.state.waitingForNewInput = true;
+            },
+
+            // وظائف الذاكرة
+            memoryClear() {
+                this.state.memory[this.state.activeMemorySlot] = null;
+                this.renderMemorySlots();
+                this.saveToLocalStorage();
+            },
+
+            memoryRecall() {
+                const value = this.state.memory[this.state.activeMemorySlot];
+                if (value !== null) {
+                    this.state.currentInput = String(value);
+                    this.state.expression = this.state.expression === '' ? 
+                        String(value) : this.state.expression + String(value);
+                    this.state.waitingForNewInput = false;
+                }
+            },
+
+            memoryAdd() {
+                const currentValue = parseFloat(this.state.currentInput);
+                const memoryValue = this.state.memory[this.state.activeMemorySlot] || 0;
+                
+                if (!isNaN(currentValue)) {
+                    this.state.memory[this.state.activeMemorySlot] = memoryValue + currentValue;
+                    this.renderMemorySlots();
+                    this.saveToLocalStorage();
+                }
+            },
+
+            memorySubtract() {
+                const currentValue = parseFloat(this.state.currentInput);
+                const memoryValue = this.state.memory[this.state.activeMemorySlot] || 0;
+                
+                if (!isNaN(currentValue)) {
+                    this.state.memory[this.state.activeMemorySlot] = memoryValue - currentValue;
+                    this.renderMemorySlots();
+                    this.saveToLocalStorage();
+                }
+            },
+
+            memoryStore() {
+                const currentValue = parseFloat(this.state.currentInput);
+                
+                if (!isNaN(currentValue)) {
+                    this.state.memory[this.state.activeMemorySlot] = currentValue;
+                    this.renderMemorySlots();
+                    this.saveToLocalStorage();
+                    
+                    // إشعار بصري
+                    const activeSlot = document.querySelector(`[data-slot="${this.state.activeMemorySlot}"]`);
+                    if (activeSlot) {
+                        activeSlot.style.backgroundColor = '#e8f4fc';
+                        setTimeout(() => {
+                            activeSlot.style.backgroundColor = '';
+                        }, 500);
+                    }
+                }
+            },
+
+            selectMemorySlot(slot) {
+                this.state.activeMemorySlot = slot;
+                this.renderMemorySlots();
+            },
+
+            clearAllMemory() {
+                if (confirm('هل تريد مسح جميع قيم الذاكرة؟')) {
+                    this.state.memory = { M1: null, M2: null, M3: null, M4: null };
+                    this.renderMemorySlots();
+                    this.saveToLocalStorage();
+                }
+            },
+
+            showMemoryHelp() {
+                alert('تعليمات الذاكرة:\n\n' +
+                      '1. اختر فتحة ذاكرة (M1-M4) بالنقر عليها\n' +
+                      '2. MS: تخزين القيمة الحالية في الذاكرة المحددة\n' +
+                      '3. MR: استرجاع القيمة من الذاكرة المحددة\n' +
+                      '4. M+: إضافة القيمة الحالية إلى الذاكرة المحددة\n' +
+                      '5. M-: طرح القيمة الحالية من الذاكرة المحددة\n' +
+                      '6. MC: مسح الذاكرة المحددة');
+            },
+
+            // السجل
+            addToHistory(expression, result) {
+                const historyItem = {
+                    expression: expression,
+                    result: result,
+                    timestamp: new Date().toLocaleString('ar-SA')
+                };
+                
+                this.state.history.unshift(historyItem);
+                
+                // حفظ فقط آخر 20 عملية
+                if (this.state.history.length > 20) {
+                    this.state.history.pop();
+                }
+                
+                this.renderHistory();
+                this.saveToLocalStorage();
+            },
+
+            clearHistory() {
+                if (confirm('هل تريد مسح سجل الحسابات بالكامل؟')) {
+                    this.state.history = [];
+                    this.renderHistory();
+                    this.saveToLocalStorage();
+                }
+            },
+
+            // الواجهة
+            toggleTheme() {
+                document.body.classList.toggle('dark-mode');
+                const icon = document.querySelector('#themeToggle i');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+                
+                this.saveToLocalStorage();
+            },
+
+            updateDisplay() {
+                document.getElementById('result').textContent = this.state.currentInput;
+                document.getElementById('expression').textContent = this.state.expression;
+                
+                // إضافة تأثير الخطأ إذا كان هناك خطأ
+                if (this.state.currentInput === 'خطأ') {
+                    document.getElementById('result').style.color = '#e74c3c';
+                } else {
+                    document.getElementById('result').style.color = '';
+                }
+            },
+
+            renderHistory() {
+                const historyList = document.getElementById('historyList');
+                
+                if (this.state.history.length === 0) {
+                    historyList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>لا توجد عمليات سابقة</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                historyList.innerHTML = this.state.history.map(item => `
+                    <div class="history-item">
+                        <div class="history-expression">${item.expression}</div>
+                        <div class="history-result">= ${item.result}</div>
+                        <div class="history-date">${item.timestamp}</div>
+                    </div>
+                `).join('');
+            },
+
+            renderMemorySlots() {
+                const memorySlots = document.getElementById('memorySlots');
+                
+                memorySlots.innerHTML = Object.keys(this.state.memory).map(slot => {
+                    const value = this.state.memory[slot];
+                    const isActive = slot === this.state.activeMemorySlot;
+                    
+                    return `
+                        <div class="memory-slot ${isActive ? 'active' : ''}" 
+                             data-slot="${slot}"
+                             onclick="CalculatorApp.selectMemorySlot('${slot}')">
+                            <div class="memory-label">${slot}</div>
+                            <div class="memory-value ${value === null ? 'memory-empty' : ''}">
+                                ${value !== null ? value : 'فارغ'}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('ar-SA', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                document.getElementById('currentTime').textContent = `الوقت الحالي: ${timeString}`;
+            },
+
+            // دعم لوحة المفاتيح
+            setupKeyboardSupport() {
+                document.addEventListener('keydown', (e) => {
+                    // منع السلوك الافتراضي للمفاتيح التي نتعامل معها
+                    if (['0','1','2','3','4','5','6','7','8','9','.', '+', '-', '*', '/', 'Enter', 'Escape', 'Backspace', '%', '(', ')'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                    
+                    switch(e.key) {
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                            this.inputNumber(e.key);
+                            break;
+                        case '.':
+                            this.inputDecimal();
+                            break;
+                        case '+':
+                        case '-':
+                            this.inputOperator(e.key);
+                            break;
+                        case '*':
+                            this.inputOperator('×');
+                            break;
+                        case '/':
+                            this.inputOperator('÷');
+                            break;
+                        case 'Enter':
+                        case '=':
+                            this.calculate();
+                            break;
+                        case 'Escape':
+                        case 'Delete':
+                            this.clear();
+                            break;
+                        case 'Backspace':
+                            this.backspace();
+                            break;
+                        case '%':
+                            this.percentage();
+                            break;
+                        case '(':
+                        case ')':
+                            this.parenthesis(e.key);
+                            break;
+                    }
+                    
+                    this.updateDisplay();
+                });
+            }
+        };
+
+        // تهيئة التطبيق عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            CalculatorApp.init();
+        });
+
+        // جعل الدوال متاحة عالمياً
+        window.CalculatorApp = CalculatorApp;
+    </script>
+</body>
+</html>
